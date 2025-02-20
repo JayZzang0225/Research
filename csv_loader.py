@@ -1,4 +1,3 @@
-# korean_refined_words.csv 파일을 읽어, 외래어(원어) -> 순화어 매핑 딕셔너리를 만드는 함수를 정의
 # csv_loader.py
 # korean_refined_words.csv 파일을 읽어, 외래어(원어) -> 순화어 매핑 딕셔너리를 생성
 
@@ -16,7 +15,7 @@ def load_refined_words(csv_path):
             # [🚨추가] 2글자 이하/1글자 이하인 경우는 스킵
             # (원한다면 3글자 미만도 스킵)
             # 너무 짧은 키가 대부분 문제를 일으킵니다.
-            if len(fw) < 3:
+            if len(fw) < 2:
                 continue
             if len(ow) < 3:
                 ow = ""  # skip effectively

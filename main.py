@@ -1,45 +1,45 @@
-# 전체 흐름을 제어하는 진입점(Entry Point) 스크립트
-# CSV 로딩 → 2) 문장 입력(또는 파일에서 가져오기) → 3) Python 기반 치환 → 4) GPT 기반 다듬기 → 5) 결과 출력/저장 등의 순서로 실행
 # main.py
-# main.py
-# 전체 흐름을 제어하는 진입점(Entry Point) 스크립트
-# CSV 로딩 → 문장 입력 → Python 기반 치환(1차) → GPT 기반 다듬기(2차) → 결과 출력
+# CSV 로딩 → 문장 입력 → Python 기반 치환(1차) → GPT 기반 다듬기(2차)
+# 2차에서 이미 치환된 고유어를 외래어로 되돌리지 않도록 프롬프트 반영
+
 # main.py
 from config import OPENAI_API_KEY, CSV_PATH
 import openai
 
 from csv_loader import load_refined_words
-# replace_in_sentence 함수가 구현된 replace_words.py (또는 replace_words_n_gram.py) 임포트
 from replace_words import replace_in_sentence
-from gpt_refiner import refine_sentence_with_gpt
+from gpt_refiner import refine_sentence_with_gpt_no_revert
 
 def main():
-    # 1) OpenAI API 설정
     openai.api_key = OPENAI_API_KEY
     
-    # 2) CSV 로딩 -> 매핑 딕셔너리 생성
     foreign_to_native = load_refined_words(CSV_PATH)
-    
-    # 3) 여러 개의 예시 문장
+
     input_sentences = [
-        "오늘은 컴퓨터를 켜서 데이터 분석을 합니다.",
-        "파인 다이닝을 예약했어요.",
-        "밀 프렙을 준비하는 게 좋겠어.",
-        "탬퍼링이 금지되어 있습니다.",
-        "소켓에 콘센트를 꽂았는데 버튼이 고장났어요."
+        """AI와 클라우드 컴퓨팅의 융합은 기업의 디지털 트랜스포메이션(Digital Transformation, DX)을 가속화하는 핵심 요소로 작용하고 있습니다. 기업이 디지털 환경에서 경쟁력을 유지하고 지속적으로 성장하기 위해서는 데이터를 효과적으로 활용하고, 운영을 자동화하며, 빠르게 변화하는 시장에 적응해야 합니다. 이러한 목표를 달성하는 데 AI와 클라우드의 결합은 필수적인 역할을 합니다.
+우선, AI와 클라우드 컴퓨팅의 융합은 기업의 비용 절감과 운영 효율성 향상에 기여합니다. 클라우드 기반 AI 시스템을 도입하면 기업은 자체적인 인공지능 인프라를 구축하지 않아도 고성능 AI 서비스를 활용할 수 있습니다. 이는 초기 투자 비용을 줄이고, 유지보수 부담을 낮추는 효과를 가져옵니다. 또한, AI의 자동화 기능을 통해 데이터 분석, 업무 프로세스 최적화, 운영 효율성 개선 등이 가능해지며, 이를 통해 기업은 인적 자원을 보다 전략적인 영역에 집중할 수 있습니다.
+또한, 클라우드 환경에서 AI는 방대한 데이터를 실시간으로 분석하고 이를 기반으로 보다 정교한 의사결정을 지원합니다. 클라우드 기반 데이터 웨어하우스와 AI 분석 모델을 결합하면 시장 트렌드 예측, 고객 행동 분석, 수요 예측 등의 영역에서 정확성을 높일 수 있습니다. 이러한 데이터 기반 의사결정 체계는 기업이 변화하는 시장 환경에 민첩하게 대응할 수 있도록 도와줍니다.
+이와 함께, AI와 클라우드 컴퓨팅은 기업의 혁신 속도를 높이고, 비즈니스 민첩성을 강화하는 데 중요한 역할을 합니다. 클라우드 기반 AI는 새로운 서비스를 빠르게 개발하고 테스트할 수 있도록 지원하므로, 기업은 변화하는 고객 요구에 신속하게 대응할 수 있습니다. 또한, AI 모델을 클라우드 환경에서 확장 및 조정할 수 있어 기업은 필요에 따라 유연하게 리소스를 관리할 수 있습니다. 이를 통해 챗봇, 개인화 추천 시스템, 예측 유지보수와 같은 AI 기반 서비스를 효율적으로 운영할 수 있습니다.
+고객 경험 개선 또한 AI와 클라우드 융합의 중요한 효과 중 하나입니다. AI는 고객 데이터를 분석하여 맞춤형 서비스를 제공하고, 실시간 대응이 가능한 챗봇과 음성 비서를 운영함으로써 고객 만족도를 높일 수 있습니다. 예를 들어, 넷플릭스(Netflix)는 클라우드 기반 AI를 활용하여 사용자별 맞춤 콘텐츠를 추천함으로써 고객 유지율을 높이고 있습니다.
+보안 및 리스크 관리 측면에서도 AI와 클라우드의 결합은 중요한 역할을 합니다. AI는 사이버 보안 시스템과 결합하여 실시간으로 위협을 감지하고 대응하는 기능을 제공합니다. 금융업계에서는 클라우드 기반 AI를 활용하여 실시간 사기 탐지 시스템을 운영하며, 이상 거래를 즉시 차단하는 데 활용하고 있습니다. 또한, 클라우드 서비스 제공업체는 강력한 보안 인프라를 제공하여 기업이 보다 안전한 환경에서 AI 기술을 운용할 수 있도록 지원합니다.
+마지막으로, AI와 클라우드 컴퓨팅의 융합은 다양한 산업에서 디지털 트랜스포메이션을 촉진하고 있습니다. 제조업에서는 스마트 팩토리를 구축하여 생산 최적화와 예측 유지보수를 수행하고 있으며, 헬스케어 분야에서는 AI를 활용한 원격 진단과 의료 데이터 분석이 이루어지고 있습니다. 금융업에서는 클라우드 AI를 기반으로 리스크 분석, 자동화된 고객 서비스, 투자 예측 등이 가능하며, 리테일 업계에서도 수요 예측과 맞춤형 마케팅이 활발하게 진행되고 있습니다.
+이처럼 AI와 클라우드 컴퓨팅의 융합은 기업이 디지털 트랜스포메이션을 성공적으로 추진하는 데 필수적인 요소로 자리 잡고 있습니다. 기업이 경쟁력을 유지하기 위해서는 AI 및 클라우드 기술을 조기에 도입하고, 데이터 전략을 명확히 수립하며, 보안 및 규제 대응을 철저히 준비하는 것이 중요합니다. 앞으로 AI와 클라우드 컴퓨팅의 발전이 가속화됨에 따라, 이를 적극적으로 활용하는 기업이 디지털 시대의 리더로 자리매김할 것으로 예상됩니다.
+"""
     ]
     
-    # 4) 각 문장에 대해 치환 + GPT로 다듬기
-    for idx, original_sentence in enumerate(input_sentences, start=1):
-        # (A) 1차 치환
-        replaced_sentence = replace_in_sentence(original_sentence, foreign_to_native)
-        # (B) GPT로 문장 다듬기 (최종 결과)
-        refined_sentence = refine_sentence_with_gpt(replaced_sentence)
-        
-        # 5) 결과 출력 (원본문장, 1차 치환, 최종 결과)
-        print(f"\n[문장 {idx}] 원본 문장: {original_sentence}")
-        print(f"1차 치환: {replaced_sentence}")
-        print(f"최종 결과: {refined_sentence}")
+    # 결과를 오직 output.txt에만 저장 (터미널에는 출력하지 않음)
+    with open("output.txt", "w", encoding="utf-8") as f:
+        for idx, original_sentence in enumerate(input_sentences, start=1):
+            # 1차 치환 (CSV 매핑)
+            replaced_sentence = replace_in_sentence(original_sentence, foreign_to_native)
+
+            # 2차 교정(이미 고유어로 치환된 단어는 역치환 금지)
+            final_sentence = refine_sentence_with_gpt_no_revert(replaced_sentence)
+
+            # 오직 파일에만 기록
+            f.write(f"[문장 {idx}] 원본 문장: {original_sentence}\n")
+            f.write(f"\n1차 치환: {replaced_sentence}\n\n")
+            f.write(f"\n최종 결과: {final_sentence}\n\n")
 
 if __name__ == "__main__":
     main()

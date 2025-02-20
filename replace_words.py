@@ -1,9 +1,4 @@
 #CSV를 통해 만든 매핑 딕셔너리를 사용해서, Python 로직(정규표현식, 간단한 split 등)으로 1차 치환하는 기능을 담습니다.
-
-# replace_words.py
-# replace_words.py
-# CSV 매핑 딕셔너리를 활용해 Python 로직(정규표현식, N-그램 등)으로
-# 1차 치환을 수행
 # replace_words.py
 import re
 
