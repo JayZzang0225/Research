@@ -2,7 +2,6 @@
 # CSV 로딩 → 문장 입력 → Python 기반 치환(1차) → GPT 기반 다듬기(2차)
 # 2차에서 이미 치환된 고유어를 외래어로 되돌리지 않도록 프롬프트 반영
 
-# main.py
 from config import OPENAI_API_KEY, CSV_PATH
 import openai
 
